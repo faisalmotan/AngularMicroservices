@@ -11,6 +11,8 @@ import { MatInputModule } from '@angular/material/input'; // (If using input)
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import {ReactiveFormsModule} from '@angular/forms';
 import { ChangepasswordComponent } from './Users/changepassword/changepassword.component'
+import { HttpClient, HttpClientModule } from '@angular/common/http';
+
 @NgModule({
   declarations: [
     AppComponent,
@@ -25,7 +27,9 @@ import { ChangepasswordComponent } from './Users/changepassword/changepassword.c
     MatFormFieldModule,
     MatInputModule,
     MatProgressSpinnerModule,
-    ReactiveFormsModule
+    ReactiveFormsModule,
+    HttpClientModule
+
   ],
   providers: [],
   bootstrap: [AppComponent]

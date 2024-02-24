@@ -11,37 +11,36 @@ export class LoginComponent implements OnInit{
 
  
 constructor(private formBuilder:FormBuilder,
-            private userService:LoginServiceService,
-            private router:Route){}
+            private userService:LoginServiceService){}
 
   LoginForm!: FormGroup;
 
  ngOnInit(): void {
     this.LoginForm = this.formBuilder.group({
-        username:['',{
+      EmailAddress:['',{
               validators:[Validators.required,Validators.email]
         }],
-        password:['',{
+        Password:['',{
           validators:[Validators.required,Validators.minLength(8), Validators.pattern(/^(?=.*[!@#$%^&*])/)]
     }]
   });
 }
 
-getErrorMessageUserName(){
-  const field = this.LoginForm.get("username");
+getErrorMessageEmailAddress(){
+  const field = this.LoginForm.get("EmailAddress");
 
   if (field?.hasError('required')){
     return 'The username is required'
   }
   if (field?.hasError('email')){
-    return 'The invalid username email format'
+    return 'The invalid EmailAddress format'
   }
 
   return ''
 }
 
 getErrorMessagePassword(){
-  const field = this.LoginForm.get("password");
+  const field = this.LoginForm.get("Password");
 
   if (field?.hasError('required')){
     return 'The password is required'
@@ -55,10 +54,27 @@ getErrorMessagePassword(){
   return ''
 }
 
+
+errorMessage: string | null = null; // Initialize with null or an initial value
+
   login(){
+console.log(this.LoginForm.value);
+const { EmailAddress, Password } = this.LoginForm.value; // Destructure EmailAddress and Password from LoginForm.value
+  const user = { EmailAddress, Password }; // Create an object representing user credentials
+ 
 
-    //this.router.resolve
-    console.warn(this.LoginForm.value);
-  }
-
+this.userService.loginUser(user).subscribe(
+      response => {
+        console.log('Login successful:', response);
+      },
+      error => {
+        console.log(error.error);
+        // if (error.status === 400 && error.error && error.error.message) {
+        //   // Display the error message in errorMessage
+           this.errorMessage = error.error;
+        // }
+      }
+    );
+  
+    }
 }
