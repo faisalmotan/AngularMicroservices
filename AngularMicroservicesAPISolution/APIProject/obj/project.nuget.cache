@@ -1,0 +1,15 @@
+{
+  "version": 2,
+  "dgSpecHash": "V5DQW6zukgKukb6M7GBRC9a1bBM5GO/kwTovG2L/N/JvAn9JQA10vDDknqQYutrWV6lyKskUvnjYI43Mm4SR7w==",
+  "success": true,
+  "projectFilePath": "E:\\Projects\\AngularMicroservices\\AngularMicroservicesAPISolution\\APIProject\\APIProject.csproj",
+  "expectedPackageFiles": [
+    "C:\\Users\\faisa\\.nuget\\packages\\microsoft.extensions.apidescription.server\\6.0.5\\microsoft.extensions.apidescription.server.6.0.5.nupkg.sha512",
+    "C:\\Users\\faisa\\.nuget\\packages\\microsoft.openapi\\1.2.3\\microsoft.openapi.1.2.3.nupkg.sha512",
+    "C:\\Users\\faisa\\.nuget\\packages\\swashbuckle.aspnetcore\\6.5.0\\swashbuckle.aspnetcore.6.5.0.nupkg.sha512",
+    "C:\\Users\\faisa\\.nuget\\packages\\swashbuckle.aspnetcore.swagger\\6.5.0\\swashbuckle.aspnetcore.swagger.6.5.0.nupkg.sha512",
+    "C:\\Users\\faisa\\.nuget\\packages\\swashbuckle.aspnetcore.swaggergen\\6.5.0\\swashbuckle.aspnetcore.swaggergen.6.5.0.nupkg.sha512",
+    "C:\\Users\\faisa\\.nuget\\packages\\swashbuckle.aspnetcore.swaggerui\\6.5.0\\swashbuckle.aspnetcore.swaggerui.6.5.0.nupkg.sha512"
+  ],
+  "logs": []
+}
