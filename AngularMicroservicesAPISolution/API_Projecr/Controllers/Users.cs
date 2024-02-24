@@ -7,6 +7,10 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using API_Projecr.Data;
 using API_Projecr.Models;
+using Microsoft.EntityFrameworkCore.Metadata.Internal;
+using System.Net;
+using System.Net.Mail;
+using OtpNet;
 
 namespace API_Projecr.Controllers
 {
@@ -19,6 +23,121 @@ namespace API_Projecr.Controllers
         public Users(ApplicationDbContext context)
         {
             _context = context;
+        }
+        private const string SecretKey = "Ht43mkcsrmvSSd";
+
+        public static string GenerateToken()
+        {
+            var totp = new Totp(Base32Encoding.ToBytes(SecretKey));
+            return totp.ComputeTotp();
+        }
+
+        public static bool VerifyToken(string token)
+        {
+            var totp = new Totp(Base32Encoding.ToBytes(SecretKey));
+            return totp.VerifyTotp(token, out _, VerificationWindow.RfcSpecifiedNetworkDelay);
+        }
+
+        private void SendEmail(string SendTo,string code)
+        {
+            try
+            {
+                var fromAddress = new MailAddress("motanfaisal67@gmail.com", "Faisal");
+                var toAddress = new MailAddress(SendTo, "To Faisal");
+                const string fromPassword = "enpighglqvxevprn";
+                const string subject = "One time token for login";
+                string body = $"Token:{code}";
+
+                var smtp = new SmtpClient
+                {
+                    Host = "smtp.gmail.com",
+                    Port = 587,
+                    EnableSsl = true,
+                    DeliveryMethod = SmtpDeliveryMethod.Network,
+                    Credentials = new NetworkCredential(fromAddress.Address, fromPassword),
+                    Timeout = 20000
+                };
+                using (var message = new MailMessage(fromAddress, toAddress)
+                {
+                    Subject = subject,
+                    Body = body
+                })
+                {
+                    smtp.Send(message);
+                }
+            }
+            catch (Exception ex)
+            {
+
+             }
+        }
+
+        [HttpGet("En")]
+        public string En(string message)
+        {
+            string encryptedMessage = Utility.EncryptString(Utility.Key, message);
+            return encryptedMessage;
+        }
+
+        [HttpGet("De")]
+        public string De(string message)
+        {
+            string encryptedMessage = Utility.DecryptString(Utility.Key, message);
+            return encryptedMessage;
+        }
+
+
+        [HttpPost("LoginUser")]
+        public async Task<ActionResult> LoginUser(Models.User user)
+        {
+            try
+            {
+
+
+                if (user == null)
+                {
+                    return BadRequest("User object is null");
+                }
+
+                Models.User ObjUser = _context.Users.Where(o => o.EmailAddress == user.EmailAddress).FirstOrDefault();
+
+                if (ObjUser != null)
+                {
+                    string dePass = Utility.DecryptString(Utility.Key, ObjUser.Password);
+                    if (!dePass.Equals(user.Password))
+                    {
+                        return BadRequest("Invalid username or password");
+
+                    }
+
+
+                    if (ObjUser.IsFirstTimeLogin)
+                    {
+                        return BadRequest("First time login. Please update your password.");
+                    }
+                    else
+                    {
+                        string token = GenerateToken();
+                        SendEmail(ObjUser.EmailAddress, token);
+                        return Ok("Login successful. Token sent to your email.");
+
+                    }
+                }
+                else
+                {
+                    return BadRequest("Invalid username or password");
+                }
+
+                //GenerateToken();
+
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+
+            }
+
+            return Ok();
         }
 
         // GET: api/Users
@@ -35,7 +154,7 @@ namespace API_Projecr.Controllers
         // GET: api/Users/5
         [HttpGet("{id}")]
         public async Task<ActionResult<User>> GetUser(int id)
-        {
+       {
           if (_context.Users == null)
           {
               return NotFound();

@@ -1,3 +1,33 @@
+//{
+//  "Routes": [
+//    {
+//      "DownstreamPathTemplate": "/api/Users",
+//      "DownstreamScheme": "https",
+//      "DownstreamHostAndPorts": [
+//        {
+//          "Host": "localhost",
+//          "Port": 7120
+//        }
+//      ],
+//      "UpstreamPathTemplate": "/Users",
+//      "UpstreamHttpMethod": [ "POST", "PUT", "GET" ]
+
+//    },
+//    {
+//      "DownstreamPathTemplate": "/api/Users/{id}",
+//      "DownstreamScheme": "https",
+//      "DownstreamHostAndPorts": [
+//        {
+//          "Host": "localhost",
+//          "Port": 7120
+//        }
+//      ],
+//      "UpstreamPathTemplate": "/Users/{id}",
+//      "UpstreamHttpMethod": [ "GET", "DELETE" ]
+//    }
+//  ]
+//}
+
 {
   "Routes": [
     {
@@ -11,7 +41,6 @@
       ],
       "UpstreamPathTemplate": "/Users",
       "UpstreamHttpMethod": [ "POST", "PUT", "GET" ]
-
     },
     {
       "DownstreamPathTemplate": "/api/Users/{id}",
@@ -24,6 +53,18 @@
       ],
       "UpstreamPathTemplate": "/Users/{id}",
       "UpstreamHttpMethod": [ "GET", "DELETE" ]
+    },
+    {
+      "DownstreamPathTemplate": "/api/Users/LoginUser",
+      "DownstreamScheme": "https",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "localhost",
+          "Port": 7120
+        }
+      ],
+      "UpstreamPathTemplate": "/Users/LoginUser",
+      "UpstreamHttpMethod": [ "POST" ]
     }
   ]
 }
