@@ -1,0 +1,14 @@
+USE [AsifBhaiTest]
+GO
+SET IDENTITY_INSERT [dbo].[Customers] ON 
+GO
+INSERT [dbo].[Customers] ([CustomerId], [CustomerName]) VALUES (1, N'Faisal')
+GO
+SET IDENTITY_INSERT [dbo].[Customers] OFF
+GO
+SET IDENTITY_INSERT [dbo].[Users] ON 
+GO
+INSERT [dbo].[Users] ([UserId], [UserName], [EmailAddress], [CustomerId], [ContactNo], [Password], [IsActive], [IsFirstTimeLogin], [Token]) VALUES (1, N'faisalmotan', N'faisal.motan3@gmail.com', 1, N'03332404449', N'iD26AYSRh6rZ0jqB6/L3tg==', 1, 0, N'138520')
+GO
+SET IDENTITY_INSERT [dbo].[Users] OFF
+GO

@@ -44,7 +44,7 @@ namespace API_Projecr.Controllers
             {
                 var fromAddress = new MailAddress("motanfaisal67@gmail.com", "Faisal");
                 var toAddress = new MailAddress(SendTo, "To Faisal");
-                const string fromPassword = "enpighglqvxevprn";
+                const string fromPassword = "";
                 const string subject = "One time token for login";
                 string body = $"Token:{code}";
 
