@@ -12,12 +12,16 @@ import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import {ReactiveFormsModule} from '@angular/forms';
 import { ChangepasswordComponent } from './Users/changepassword/changepassword.component'
 import { HttpClient, HttpClientModule } from '@angular/common/http';
-
+import { HomeComponent } from './home/home.component';
+import { TokenValidateComponent } from './users/token-validate/token-validate.component';
+  
 @NgModule({
   declarations: [
     AppComponent,
     LoginComponent,
-    ChangepasswordComponent
+    ChangepasswordComponent,
+    HomeComponent,
+    TokenValidateComponent 
   ],
   imports: [
     BrowserModule,

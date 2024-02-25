@@ -14,7 +14,7 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyCompanyAttribute("API_Projecr")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Debug")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+1fe22f992a9646512a25706a8a28ba9ab1f0873b")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+dbb4d5186312be662d436c0222b24613e1fe35a3")]
 [assembly: System.Reflection.AssemblyProductAttribute("API_Projecr")]
 [assembly: System.Reflection.AssemblyTitleAttribute("API_Projecr")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]

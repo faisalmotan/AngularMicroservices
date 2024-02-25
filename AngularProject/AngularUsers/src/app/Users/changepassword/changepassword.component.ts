@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
-import {FormGroup,FormControl, FormBuilder, Validators} from '@angular/forms'
+import {FormGroup, FormBuilder, Validators} from '@angular/forms'
 import { LoginServiceService } from '../Users/login-service.service';
-import { Route } from '@angular/router';
+import { Route, Router } from '@angular/router';
 
 @Component({
   selector: 'app-changepassword',
@@ -12,36 +12,41 @@ export class ChangepasswordComponent implements OnInit{
 
  
   constructor(private formBuilder:FormBuilder,
-              private userService:LoginServiceService){}
+              private userService:LoginServiceService,
+              private router:Router){}
   
-    LoginForm!: FormGroup;
-  
+    ChangePassword!: FormGroup;
+
+
+    password(formGroup: FormGroup) {
+      let Password:any = formGroup.get('Password')?.value;
+      let ConfirmPassword:any = formGroup.get('ConfirmPassword')?.value;
+      var IsPassMatched = Password === ConfirmPassword;
+      console.log(IsPassMatched);
+      return Password == ConfirmPassword ? false : { passwordNotMatch: true };
+    }
+
    ngOnInit(): void {
-      this.LoginForm = this.formBuilder.group({
-        EmailAddress:['',{
-                validators:[Validators.required,Validators.email]
-          }],
+      this.ChangePassword = this.formBuilder.group({
+       
           Password:['',{
-            validators:[Validators.required,Validators.minLength(8), Validators.pattern(/^(?=.*[!@#$%^&*])/)]
-      }]
-    });
-  }
-  
-  getErrorMessageEmailAddress(){
-    const field = this.LoginForm.get("EmailAddress");
-  
-    if (field?.hasError('required')){
-      return 'The username is required'
+            validators:[Validators.required,Validators.minLength(8)
+              , Validators.pattern(/^(?=.*[!@#$%^&*])/)
+            ]
+      }],
+      ConfirmPassword:['',{
+        validators:[Validators.required,Validators.minLength(8)
+          , Validators.pattern(/^(?=.*[!@#$%^&*])/)
+        ]
+  }]
+    }, {
+      validators: this.password.bind(this)
     }
-    if (field?.hasError('email')){
-      return 'The invalid EmailAddress format'
-    }
-  
-    return ''
+    );
   }
-  
-  getErrorMessagePassword(){
-    const field = this.LoginForm.get("Password");
+
+  getErrorMessageConfirmPassword(){
+    const field = this.ChangePassword.get("ConfirmPassword");
   
     if (field?.hasError('required')){
       return 'The password is required'
@@ -52,28 +57,49 @@ export class ChangepasswordComponent implements OnInit{
     if (field?.hasError('pattern')) {
       return 'The password must contain at least one special character (!@#$%^&*)';
     }
+  
     return ''
+  }
+  
+  getErrorMessagePassword(){
+    const field = this.ChangePassword.get("Password");
+  
+    if (field?.hasError('required')){
+      return 'The password is required'
+    }
+    if (field?.hasError('minlength')) {
+      return 'The password must be at least 8 characters long';
+    }
+    if (field?.hasError('pattern')) {
+      return 'The password must contain at least one special character (!@#$%^&*)';
+    }
+     return ''
   }
   
   
   errorMessage: string | null = null; // Initialize with null or an initial value
   
-    login(){
-  console.log(this.LoginForm.value);
-  const { EmailAddress, Password } = this.LoginForm.value; // Destructure EmailAddress and Password from LoginForm.value
-    const user = { EmailAddress, Password }; // Create an object representing user credentials
-   
-  
-  this.userService.loginUser(user).subscribe(
+ ChangePasswordMethod(){
+  let userInfoString:any = sessionStorage.getItem('userInfo');
+
+    const userInfo = JSON.parse(userInfoString);
+    const emailAddress = userInfo.emailAddress;
+    
+  console.log(userInfo);
+     const { Password } = this.ChangePassword.value; 
+    const user = { EmailAddress:emailAddress , Password };
+  console.log(user);
+  this.userService.ChangePassword(user).subscribe(
         response => {
-          console.log('Login successful:', response);
+          console.log('Password changed successful:', response);
+          if (response){
+            this.router.navigate(['/login']);
+
+          }
         },
         error => {
           console.log(error.error);
-          // if (error.status === 400 && error.error && error.error.message) {
-          //   // Display the error message in errorMessage
              this.errorMessage = error.error;
-          // }
         }
       );
     

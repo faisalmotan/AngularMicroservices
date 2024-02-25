@@ -86,14 +86,80 @@ namespace API_Projecr.Controllers
             return encryptedMessage;
         }
 
+        [HttpPost("TokenValidate")]
+        public async Task<ActionResult> TokenValidate(Models.User user)
+        {
+            try
+            {
+                if (user == null)
+                {
+                    return BadRequest("Invalid token");
+                }
+
+                Models.User ObjUser = _context.Users.Where(o => o.EmailAddress == user.EmailAddress).FirstOrDefault();
+
+                if (ObjUser != null)
+                {
+
+                    if (ObjUser.Token.Equals(user.Token))
+                    {
+                        return Ok(true);
+                    }
+                    else
+                    {
+                        return BadRequest("Invalid token");
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+
+            }
+
+            return Ok();
+        }
+
+
+        [HttpPost("ChangePassword")]
+        public async Task<ActionResult> ChangePassword(Models.User user)
+        {
+            try
+            {
+                if (user == null)
+                {
+                    return BadRequest("User object is null");
+                }
+
+                Models.User ObjUser = _context.Users.Where(o => o.EmailAddress == user.EmailAddress).FirstOrDefault();
+
+                if (ObjUser != null)
+                {
+                    string EnPass = Utility.EncryptString(Utility.Key, user.Password);
+
+                    ObjUser.Password = EnPass;
+                    ObjUser.IsFirstTimeLogin = false;
+                    _context.SaveChanges();
+                    return Ok(true);
+                }
+
+
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+
+            }
+
+            return Ok();
+        }
+
 
         [HttpPost("LoginUser")]
         public async Task<ActionResult> LoginUser(Models.User user)
         {
             try
             {
-
-
                 if (user == null)
                 {
                     return BadRequest("User object is null");
@@ -113,13 +179,16 @@ namespace API_Projecr.Controllers
 
                     if (ObjUser.IsFirstTimeLogin)
                     {
-                        return BadRequest("First time login. Please update your password.");
+                        return Ok(ObjUser);
                     }
                     else
                     {
                         string token = GenerateToken();
+                        ObjUser.Token = token;
+                        _context.SaveChanges();
+
                         SendEmail(ObjUser.EmailAddress, token);
-                        return Ok("Login successful. Token sent to your email.");
+                        return Ok(true);
 
                     }
                 }

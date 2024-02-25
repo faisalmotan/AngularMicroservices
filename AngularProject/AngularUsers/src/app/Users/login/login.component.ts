@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import {FormGroup,FormControl, FormBuilder, Validators} from '@angular/forms'
 import { LoginServiceService } from '../Users/login-service.service';
-import { Route } from '@angular/router';
+import { Route, Router } from '@angular/router';
 @Component({
   selector: 'app-login',
   templateUrl: './login.component.html',
@@ -11,7 +11,8 @@ export class LoginComponent implements OnInit{
 
  
 constructor(private formBuilder:FormBuilder,
-            private userService:LoginServiceService){}
+            private userService:LoginServiceService,
+            private router:Router){}
 
   LoginForm!: FormGroup;
 
@@ -59,13 +60,21 @@ errorMessage: string | null = null; // Initialize with null or an initial value
 
   login(){
 console.log(this.LoginForm.value);
-const { EmailAddress, Password } = this.LoginForm.value; // Destructure EmailAddress and Password from LoginForm.value
-  const user = { EmailAddress, Password }; // Create an object representing user credentials
+const { EmailAddress, Password } = this.LoginForm.value;
+  const user = { EmailAddress, Password }; 
  
 
 this.userService.loginUser(user).subscribe(
       response => {
-        console.log('Login successful:', response);
+        console.log(response);
+        if (response.isFirstTimeLogin){
+          sessionStorage.setItem('userInfo', JSON.stringify(response));
+          this.router.navigate(['/changePassword']);
+        }
+        else if (response){
+          this.router.navigate(['/Token']);
+
+        }
       },
       error => {
         console.log(error.error);
